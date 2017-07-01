@@ -15,16 +15,16 @@ module.exports = function sailsHookAmqp(sails) {
                 timeout: 5000,
                 name: "amqp",
                 active : true,
-                serverUrl : ""
+                amqpUrl  : ""
             }
         },
 
         configure: function() {
 
-            // Validate `sails.config.amqp.serverUrl`
-            if ( !sails.config[this.configKey].serverUrl || !_.isString(sails.config[this.configKey].serverUrl) ) {
+            // Validate `sails.config.amqp.amqpUrl`
+            if ( !sails.config[this.configKey].amqpUrl  || !_.isString(sails.config[this.configKey].amqpUrl ) ) {
                 throw new Error(
-                    'Expected AMQP server URL (a string) to be provided as `sails.config.' + this.configKey + '.serverUrl`, but the provided URL is invalid or undefined.'
+                    'Expected AMQP server URL (a string) to be provided as `sails.config.' + this.configKey + '.amqpUrl `, but the provided URL is invalid or undefined.'
                 );
             }
         },
@@ -45,7 +45,7 @@ module.exports = function sailsHookAmqp(sails) {
 
         connect : function connect(cb) {
             var self = this;
-            amqp.connect(sails.config[this.configKey].serverUrl, function (err, conn) {
+            amqp.connect(sails.config[this.configKey].amqpUrl, function (err, conn) {
                 if (err) {
                     console.error("[AMQP]", err.message);
                     cb(err);

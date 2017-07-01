@@ -10,7 +10,7 @@ Create a file named <code>amqp.js</code> in your <code>config</code>
 directory with the following content
 <pre>
 module.exports.amqp = {
-    serverUrl: 'amqp://your-server-url',
+    amqpUrl: 'amqp://your-amqp-server-url',
     active : true // Whether or not the hook will be active (defaults to true)
 };
 </pre>

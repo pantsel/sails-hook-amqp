@@ -24,7 +24,7 @@ describe('Basic test ::', function() {
                 "grunt": false
             },
             amqp : {
-              serverUrl : process.env.serverUrl
+                amqpUrl : process.env.amqpUrl
             },
             log: {level: "debug"}
         },function (err, _sails) {
