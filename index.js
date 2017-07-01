@@ -81,7 +81,7 @@ module.exports = function sailsHookAmqp(sails) {
                 });
 
                 pubChannel = ch;
-                console.log("[AMQP] Default publisher started");
+                console.log("[AMQP] Publisher started");
                 while (true) {
                     var m = offlinePubQueue.shift();
                     if (!m) break;
@@ -169,13 +169,6 @@ module.exports = function sailsHookAmqp(sails) {
 
                 }
             });
-        },
-
-
-
-        work : function work(msg, cb) {
-            console.log("Got msg", msg.content.toString());
-            cb(true);
         },
 
 
