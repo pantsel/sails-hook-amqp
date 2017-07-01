@@ -1,6 +1,6 @@
 # sails-hook-amqp
 
-> This project is still under heavy development. Don't expect everything to be working perfectly :)
+> This project is still under heavy development and the API is a subject to change.
 
 ## Installation
 <pre>$ npm install sails-hook-amqp --save</pre>
@@ -21,12 +21,12 @@ module.exports.amqp = {
 <pre>
 
 // JSON data
-sails.hooks.amqp.publish("","my-queue-name",{
+sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name",{
     foo : "bar"
 })
 
 // Simple text
-sails.hooks.amqp.publish("","my-queue-name","Hello world!!")
+sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name","Hello world!!")
 </pre>
 
 ### Subscribe

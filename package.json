@@ -15,17 +15,15 @@
     "isHook": true,
     "hookName": "amqp"
   },
-  "dependencies" : {
-    "@sailshq/lodash": "^3.10.2"
+  "dependencies": {
+    "amqplib": "^0.5.1"
   },
   "devDependencies": {
     "chai": "^4.0.2",
     "chai-json-schema": "^1.4.0",
+    "mocha": "^3.4.2",
     "sails": "~0.12.3"
   },
   "author": "Panagis Tselentis",
-  "license": "MIT",
-  "dependencies": {
-    "amqplib": "^0.5.1"
-  }
+  "license": "MIT"
 }
