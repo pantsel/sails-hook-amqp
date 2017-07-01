@@ -1,6 +1,6 @@
 {
   "name": "sails-hook-amqp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A sails hook that provides easy amqp integration",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "hookName": "amqp"
   },
   "dependencies": {
+    "@sailshq/lodash": "^3.10.2",
     "amqplib": "^0.5.1"
   },
   "devDependencies": {
