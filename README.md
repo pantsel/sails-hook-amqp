@@ -1,6 +1,6 @@
 # sails-hook-amqp
 
-> This project is still under development. Don't expect everything to be working perfectly :)
+> This project is still under heavy development. Don't expect everything to be working perfectly :)
 
 ## Installation
 <pre>$ npm install sails-hook-amqp --save</pre>
