@@ -19,11 +19,13 @@ module.exports.amqp = {
 
 ### Publish
 
-> sails.hooks.amqp.publish(exchange, routingKey, content, [options])
+#### sails.hooks.amqp.publish(exchange, routingKey, content, [options])
+
+> The [options] parameter can be omitted.
 
 See [amqp.node@channel_publish](http://www.squaremobius.net/amqp.node/channel_api.html#channel_publish) for details.
 
-##### Examples
+#### Examples
 
 <pre>
 
@@ -37,6 +39,14 @@ sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name","Hello 
 </pre>
 
 ### Subscribe
+
+#### sails.hooks.amqp.subscribe(routingKey,onMessageCallback,[assertQueueOpts],[consumeOpts])
+
+> The [assertQueueOpts] & [consumeOpts] parameters can be omitted.
+
+See [amqp.node@channel_assertQueue](http://www.squaremobius.net/amqp.node/channel_api.html#channel_assertQueue),
+[amqp.node@channel_consume](http://www.squaremobius.net/amqp.node/channel_api.html#channel_consume) for details.
+
 <pre>
 sails.hooks.amqp.subscribe("my-queue-name",function onMessage(msg){
     console.log(msg)

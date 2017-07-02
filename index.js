@@ -134,9 +134,14 @@ module.exports = function sailsHookAmqp(sails) {
         },
 
 
-        subscribe : function subscribe(q,onMessage) {
+        subscribe : function subscribe(q,onMessage,assertQueueOpts,consumeOpts) {
 
             var self = this;
+            var defaultAssertQueueOpts = { durable: true }
+            assertQueueOpts = _.merge(defaultAssertQueueOpts, (assertQueueOpts || {}))
+            var defaultConsumeOpts = { noAck: false }
+            consumeOpts = _.merge(defaultConsumeOpts, (consumeOpts || {}))
+
             amqpConn.createChannel(function(err, ch) {
                 if (self.closeOnErr(err)) return;
                 ch.on("error", function(err) {
@@ -146,9 +151,9 @@ module.exports = function sailsHookAmqp(sails) {
                     console.log("[AMQP] channel closed");
                 });
                 ch.prefetch(10);
-                ch.assertQueue(q, { durable: true }, function(err, _ok) {
+                ch.assertQueue(q, assertQueueOpts, function(err, _ok) {
                     if (self.closeOnErr(err)) return;
-                    ch.consume(q, processMsg, { noAck: false });
+                    ch.consume(q, processMsg, consumeOpts);
                     console.log("[AMQP] Worker started");
                 });
 
