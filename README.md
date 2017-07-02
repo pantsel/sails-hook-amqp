@@ -28,6 +28,7 @@ See [amqp.node@connect](http://www.squaremobius.net/amqp.node/channel_api.html#c
 ## Usage
 
 ### Publish
+Publish a single message to an exchange.
 
 #### sails.hooks.amqp.publish(exchange, routingKey, content, [options])
 
@@ -54,6 +55,7 @@ sails.hooks.amqp.publish("exchange-type-or-empty-string","my-routing-key",new Bu
 
 
 ### Send to Queue
+Send a single message with the content given as a buffer, string or JSON to the specific queue named, bypassing routing. The options and return value are exactly the same as for #publish.
 
 #### sails.hooks.amqp.sendToQueue(queue, content, [options])
 
@@ -76,7 +78,7 @@ sails.hooks.amqp.sendToQueue("my-queue-name",{
 
 ### Subscribe
 
-#### sails.hooks.amqp.subscribe(routingKey,onMessageCallback,[assertQueueOpts],[consumeOpts])
+#### sails.hooks.amqp.subscribe([queue || routingKey],onMessageCallback,[assertQueueOpts],[consumeOpts])
 
 > The [assertQueueOpts] & [consumeOpts] parameters can be omitted in favour of defaults.
 
