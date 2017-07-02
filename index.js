@@ -1,10 +1,8 @@
 'use strict';
 
-var amqp = require('amqplib/callback_api');
-var amqpConn = null;
-var pubChannel = null;
-var offlinePubQueue = [];
+var AMQP = require('./lib/amqp')
 var _ = require('@sailshq/lodash')
+var amqpObj = null;
 
 
 module.exports = function sailsHookAmqp(sails) {
@@ -41,154 +39,47 @@ module.exports = function sailsHookAmqp(sails) {
                 return next();
             }
 
-            this.connect(function(err,conn){
+            this.connect(function(err,instance){
                 next();
             });
         },
 
+        createInstance : function () {
+          return new AMQP();
+        },
+
         connect : function connect(cb) {
-            var self = this;
             var socketOpts = sails.config[this.configKey].socketOptions;
-            amqp.connect(sails.config[this.configKey].amqpUrl,socketOpts, function (err, conn) {
+
+            amqpObj = new AMQP();
+
+            amqpObj.connect(sails.config[this.configKey].amqpUrl,socketOpts, function (err, instance) {
                 if (err) {
-                    console.error("[AMQP]", err.message);
-                    cb(err);
-                    return setTimeout(self.connect, 1000);
+                    return cb(err);
                 }
-                conn.on("error", function (err) {
-                    if (err.message !== "Connection closing") {
-                        console.error("[AMQP] conn error", err.message);
-                    }
-                });
-                conn.on("close", function () {
-                    console.error("[AMQP] reconnecting");
-                    return setTimeout(self.start, 1000);
-                });
+
                 console.log("[AMQP] connected");
-                amqpConn = conn;
-                cb(null,conn)
+                cb(null,instance)
             });
         },
 
-
-        startPublisher : function startPublisher(cb) {
-            var self = this
-            amqpConn.createConfirmChannel(function(err, ch) {
-                if (self.closeOnErr(err)) {
-                    return cb(err)
-                };
-                ch.on("error", function(err) {
-                    console.error("[AMQP] channel error", err.message);
-                });
-                ch.on("close", function() {
-                    console.log("[AMQP] channel closed");
-                });
-
-                pubChannel = ch;
-                console.log("[AMQP] Publisher started");
-                while (true) {
-                    var m = offlinePubQueue.shift();
-                    if (!m) break;
-                    self.publish(m[0], m[1], m[2]);
-                }
-                cb(null,ch)
-            });
-        },
-
-
-        publish : function publish(exchange, routingKey, content, opts) {
+        publish : function publish(exchange, routingKey, content, cb, opts) {
 
             var defaultOpts = { persistent: true };
             opts = _.merge(defaultOpts, (opts || {}))
-
-            function doPublish() {
-                try {
-                    content = JSON.stringify(content)
-                } catch(e) {
-
-                }
-
-                var _content = content instanceof Buffer ? content : new Buffer(content)
-
-                try {
-                    pubChannel.publish(exchange, routingKey, _content, opts,
-                        function(err, ok) {
-                            if (err) {
-                                console.error("[AMQP] publish", err);
-                                offlinePubQueue.push([exchange, routingKey, _content]);
-                                pubChannel.connection.close();
-                            }
-
-                            console.log("[AMQP] publish", content)
-                        });
-                } catch (e) {
-                    console.error("[AMQP] publish", e.message);
-                    offlinePubQueue.push([exchange, routingKey, _content]);
-                }
-            }
-
-            if(!this.pubChannel) {
-                this.startPublisher(function (err,ch) {
-                    doPublish();
-                })
-            }else{
-                doPublish();
-            }
+            amqpObj.publish(exchange, routingKey, content, cb,opts)
 
         },
 
 
         subscribe : function subscribe(q,onMessage,assertQueueOpts,consumeOpts) {
 
-            var self = this;
             var defaultAssertQueueOpts = { durable: true }
             assertQueueOpts = _.merge(defaultAssertQueueOpts, (assertQueueOpts || {}))
             var defaultConsumeOpts = { noAck: false }
             consumeOpts = _.merge(defaultConsumeOpts, (consumeOpts || {}))
+            amqpObj.subscribe(q,onMessage,assertQueueOpts,consumeOpts)
 
-            amqpConn.createChannel(function(err, ch) {
-                if (self.closeOnErr(err)) return;
-                ch.on("error", function(err) {
-                    console.error("[AMQP] channel error", err.message);
-                });
-                ch.on("close", function() {
-                    console.log("[AMQP] channel closed");
-                });
-                ch.prefetch(10);
-                ch.assertQueue(q, assertQueueOpts, function(err, _ok) {
-                    if (self.closeOnErr(err)) return;
-                    ch.consume(q, processMsg, consumeOpts);
-                    console.log("[AMQP] Worker started");
-                });
-
-                function processMsg(msg) {
-
-                    try {
-                        if(msg != null) {
-                            ch.ack(msg);
-                            if(onMessage) {
-                                try {
-                                    onMessage(JSON.parse(msg.content.toString()))
-                                } catch(e) {
-                                    onMessage(msg.content.toString())
-                                }
-                            }
-                        }
-                    } catch (e) {
-                        self.closeOnErr(e);
-                    }
-
-
-                }
-            });
-        },
-
-
-        closeOnErr : function closeOnErr(err) {
-            if (!err) return false;
-            console.error("[AMQP] error", err);
-            amqpConn.close();
-            return true;
         },
 
         /**

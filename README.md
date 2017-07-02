@@ -44,14 +44,22 @@ See [amqp.node@channel_publish](http://www.squaremobius.net/amqp.node/channel_ap
 // JSON data
 sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name",{
     foo : "bar"
+},function(err,ok){
+    // Handle error
 })
 
 // Simple text
-sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name","Hello world!!")
+sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name","Hello world!!",
+function(err,ok){
+    // Handle error
+})
 
 
 // Buffer
-sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name",new Buffer("Hello world!!"))
+sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name",new Buffer("Hello world!!"),
+function(err,ok){
+    // Handle error
+})
 </pre>
 
 ### Subscribe
