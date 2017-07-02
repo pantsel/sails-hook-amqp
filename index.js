@@ -92,7 +92,10 @@ module.exports = function sailsHookAmqp(sails) {
         },
 
 
-        publish : function publish(exchange, routingKey, content) {
+        publish : function publish(exchange, routingKey, content, opts) {
+
+            var defaultOpts = { persistent: true };
+            opts = _.merge(defaultOpts, (opts || {}))
 
             function doPublish() {
                 try {
@@ -104,7 +107,7 @@ module.exports = function sailsHookAmqp(sails) {
                 var _content = new Buffer(content)
 
                 try {
-                    pubChannel.publish(exchange, routingKey, _content, { persistent: true },
+                    pubChannel.publish(exchange, routingKey, _content, opts,
                         function(err, ok) {
                             if (err) {
                                 console.error("[AMQP] publish", err);
