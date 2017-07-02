@@ -106,9 +106,4 @@ describe('Basic test ::', function() {
 
     });
 
-
-
-
-
-
 });

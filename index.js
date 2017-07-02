@@ -15,7 +15,8 @@ module.exports = function sailsHookAmqp(sails) {
                 timeout: 5000,
                 name: "amqp",
                 active : true,
-                amqpUrl  : ""
+                amqpUrl  : "",
+                connectParams : null
             }
         },
 
@@ -45,7 +46,8 @@ module.exports = function sailsHookAmqp(sails) {
 
         connect : function connect(cb) {
             var self = this;
-            amqp.connect(sails.config[this.configKey].amqpUrl, function (err, conn) {
+            var socketOpts = sails.config[this.configKey].socketOptions;
+            amqp.connect(sails.config[this.configKey].amqpUrl,socketOpts, function (err, conn) {
                 if (err) {
                     console.error("[AMQP]", err.message);
                     cb(err);

@@ -11,9 +11,19 @@ directory with the following content
 <pre>
 module.exports.amqp = {
     amqpUrl: 'amqp://your-amqp-server-url',
-    active : true // Whether or not the hook will be active (defaults to true)
+    active : true // Whether or not the hook will be active (defaults to true),
+    socketOptions : {
+        noDelay : true | false          // boolean
+        cert: certificateAsBuffer,      // client cert
+        key: privateKeyAsBuffer,        // client key
+        passphrase: 'MySecretPassword', // passphrase for key
+        ca: [caCertAsBuffer]            // array of trusted CA certs
+    }
 };
 </pre>
+> The <code>socketOptions</code> property can be omitted if not relevant.
+
+See [amqp.node@connect](http://www.squaremobius.net/amqp.node/channel_api.html#connect) for details.
 
 ## Usage
 
