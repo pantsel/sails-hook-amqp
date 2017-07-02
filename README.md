@@ -18,6 +18,13 @@ module.exports.amqp = {
 ## Usage
 
 ### Publish
+
+> sails.hooks.amqp.publish(exchange, routingKey, content, [options])
+
+See [amqp.node@channel_publish](http://www.squaremobius.net/amqp.node/channel_api.html#channel_publish) for details.
+
+##### Examples
+
 <pre>
 
 // JSON data
