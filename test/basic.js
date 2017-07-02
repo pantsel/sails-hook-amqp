@@ -126,6 +126,26 @@ describe('Basic test ::', function() {
     });
 
 
+    // Test pubsub with buffer
+    it('Pubsub with sendToQueue', function(done) {
+        this.timeout(10000);
+
+        var payload = new Buffer("Hello World")
+
+        var queue = "test.queue.sendToQueue"
+
+        sails.hooks["amqp"].subscribe(queue,function onMessage(msg){
+            sails.log.debug("[sails-hook-amqp] : subscriber received message",msg)
+            expect(msg).to.be.jsonSchema(payload);
+            done();
+        })
+
+
+        sails.hooks["amqp"].sendToQueue(queue,payload)
+
+    });
+
+
     // Test manual connect
     it('Manual connection', function(done) {
         this.timeout(10000);

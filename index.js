@@ -65,10 +65,13 @@ module.exports = function sailsHookAmqp(sails) {
 
         publish : function publish(exchange, routingKey, content, opts) {
 
-            var defaultOpts = { persistent: true };
-            opts = _.merge(defaultOpts, (opts || {}))
             amqpObj.publish(exchange, routingKey, content, opts)
 
+        },
+
+
+        sendToQueue : function sendToQueue(queue,content,opts) {
+            amqpObj.sendToQueue(queue,content,opts)
         },
 
 

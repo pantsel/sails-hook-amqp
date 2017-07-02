@@ -42,25 +42,37 @@ See [amqp.node@channel_publish](http://www.squaremobius.net/amqp.node/channel_ap
 <pre>
 
 // JSON data
-sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name",{
-    foo : "bar"
-},function(err,ok){
-    // Handle error
-})
+sails.hooks.amqp.publish("exchange-type-or-empty-string","my-routing-key")
 
 // Simple text
-sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name","Hello world!!",
-function(err,ok){
-    // Handle error
-})
+sails.hooks.amqp.publish("exchange-type-or-empty-string","my-routing-key","Hello world!!")
 
 
 // Buffer
-sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name",new Buffer("Hello world!!"),
-function(err,ok){
-    // Handle error
-})
+sails.hooks.amqp.publish("exchange-type-or-empty-string","my-routing-key",new Buffer("Hello world!!"))
 </pre>
+
+
+### Send to Queue
+
+#### sails.hooks.amqp.sendToQueue(queue, content, [options])
+
+> The [options] parameter can be omitted in favour of defaults.
+
+<pre>defaultOpts = { persistent: true }</pre>
+
+See [amqp.node@channel_sendToQueue](http://www.squaremobius.net/amqp.node/channel_api.html#channel_sendToQueue) for details.
+
+#### Examples
+
+<pre>
+
+sails.hooks.amqp.sendToQueue("my-queue-name",{
+    foo : "bar"
+})
+
+</pre>
+
 
 ### Subscribe
 
