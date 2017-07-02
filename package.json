@@ -1,6 +1,6 @@
 {
   "name": "sails-hook-amqp",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A sails hook that provides easy amqp integration",
   "main": "index.js",
   "scripts": {
