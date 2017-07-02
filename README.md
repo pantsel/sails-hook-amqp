@@ -48,6 +48,10 @@ sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name",{
 
 // Simple text
 sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name","Hello world!!")
+
+
+// Buffer
+sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name",new Buffer("Hello world!!"))
 </pre>
 
 ### Subscribe

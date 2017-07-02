@@ -106,4 +106,23 @@ describe('Basic test ::', function() {
 
     });
 
+    // Test pubsub with buffer
+    it('Pubsub with buffer', function(done) {
+        this.timeout(10000);
+
+        var payload = new Buffer("Hello World")
+
+        var queue = "test.queue.buffer"
+
+        sails.hooks["amqp"].subscribe(queue,function onMessage(msg){
+            sails.log.debug("[sails-hook-amqp] : subscriber received message",msg)
+            expect(msg).to.be.jsonSchema(payload);
+            done();
+        })
+
+
+        sails.hooks["amqp"].publish("",queue,payload)
+
+    });
+
 });

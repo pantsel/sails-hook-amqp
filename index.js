@@ -108,7 +108,7 @@ module.exports = function sailsHookAmqp(sails) {
 
                 }
 
-                var _content = new Buffer(content)
+                var _content = content instanceof Buffer ? content : new Buffer(content)
 
                 try {
                     pubChannel.publish(exchange, routingKey, _content, opts,
