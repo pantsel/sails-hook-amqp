@@ -63,11 +63,11 @@ module.exports = function sailsHookAmqp(sails) {
             });
         },
 
-        publish : function publish(exchange, routingKey, content, cb, opts) {
+        publish : function publish(exchange, routingKey, content, opts) {
 
             var defaultOpts = { persistent: true };
             opts = _.merge(defaultOpts, (opts || {}))
-            amqpObj.publish(exchange, routingKey, content, cb,opts)
+            amqpObj.publish(exchange, routingKey, content, opts)
 
         },
 

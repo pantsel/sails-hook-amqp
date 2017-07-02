@@ -80,10 +80,7 @@ describe('Basic test ::', function() {
         })
 
 
-        sails.hooks["amqp"].publish("",queue,payload,function(err,ok){
-            expect(err).to.be.a('null');
-            sails.log.debug("[sails-hook-amqp] : 'Pubsub with string data => message published",ok)
-        })
+        sails.hooks["amqp"].publish("",queue,payload)
 
     });
 
@@ -105,10 +102,7 @@ describe('Basic test ::', function() {
         })
 
 
-        sails.hooks["amqp"].publish("",queue,payload,function(err,ok){
-            expect(err).to.be.a('null');
-            sails.log.debug("[sails-hook-amqp] : 'Pubsub with json data => message published",ok)
-        })
+        sails.hooks["amqp"].publish("",queue,payload)
 
     });
 
@@ -127,49 +121,46 @@ describe('Basic test ::', function() {
         })
 
 
-        sails.hooks["amqp"].publish("",queue,payload,function(err,ok){
-            expect(err).to.be.a('null');
-            sails.log.debug("[sails-hook-amqp] : 'Pubsub with buffer data => message published",ok)
-        })
+        sails.hooks["amqp"].publish("",queue,payload)
 
     });
 
 
-    // // Test manual connect
-    // it('Manual connection', function(done) {
-    //     this.timeout(10000);
-    //
-    //     var amqp = sails.hooks.amqp.createInstance();
-    //     amqp.connect(sails.config.amqp.amqpUrl,function (err,instance) {
-    //         expect(err).to.be.a('null')
-    //         done()
-    //     })
-    // });
-    //
-    //
-    // // Manual PubSub
-    // it('Manual PubSub', function(done) {
-    //     this.timeout(10000);
-    //
-    //     var payload = new Buffer("Hello World")
-    //     var queue = "test.queue.manual_pubsub"
-    //     var msgCount = 0;
-    //     var amqp2 = sails.hooks.amqp.createInstance();
-    //
-    //     amqp2.connect(sails.config.amqp.amqpUrl,function (err,instance) {
-    //         expect(err).to.be.a('null')
-    //
-    //         instance.subscribe(queue,function onMessage(msg){
-    //             sails.log.debug("[sails-hook-amqp] : Manual PubSub => subscriber received message",msg)
-    //             expect(msg).to.be.jsonSchema(payload);
-    //             msgCount++;
-    //             if(msgCount <=1) done();
-    //         })
-    //
-    //         instance.publish("",queue,payload)
-    //     })
-    //
-    // });
+    // Test manual connect
+    it('Manual connection', function(done) {
+        this.timeout(10000);
+
+        var amqp = sails.hooks.amqp.createInstance();
+        amqp.connect(sails.config.amqp.amqpUrl,function (err,instance) {
+            expect(err).to.be.a('null')
+            done()
+        })
+    });
+
+
+    // Manual PubSub
+    it('Manual PubSub', function(done) {
+        this.timeout(10000);
+
+        var payload = new Buffer("Hello World")
+        var queue = "test.queue.manual_pubsub"
+        var msgCount = 0;
+        var amqp2 = sails.hooks.amqp.createInstance();
+
+        amqp2.connect(sails.config.amqp.amqpUrl,function (err,instance) {
+            expect(err).to.be.a('null')
+
+            instance.subscribe(queue,function onMessage(msg){
+                sails.log.debug("[sails-hook-amqp] : Manual PubSub => subscriber received message",msg)
+                expect(msg).to.be.jsonSchema(payload);
+                msgCount++;
+                if(msgCount <=1) done();
+            })
+
+            instance.publish("",queue,payload)
+        })
+
+    });
 
 
 });
