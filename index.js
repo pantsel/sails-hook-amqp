@@ -41,7 +41,9 @@ module.exports = function sailsHookAmqp(sails) {
                 return next();
             }
 
-            this.connect(next);
+            this.connect(function(err,conn){
+                next();
+            });
         },
 
         connect : function connect(cb) {
