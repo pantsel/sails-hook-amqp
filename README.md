@@ -1,6 +1,6 @@
 # sails-hook-amqp
 
-> This project is still under heavy development and the API is a subject to change.
+A wrapper of [amqp.node](https://github.com/squaremo/amqp.node) bundled as a sails js Hook that enables you to use the [AMQP](https://www.amqp.org/) protocol for sending and receiving messages. 
 
 ## Installation
 <pre>$ npm install sails-hook-amqp --save</pre>
