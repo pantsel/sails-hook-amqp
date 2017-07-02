@@ -31,7 +31,9 @@ See [amqp.node@connect](http://www.squaremobius.net/amqp.node/channel_api.html#c
 
 #### sails.hooks.amqp.publish(exchange, routingKey, content, [options])
 
-> The [options] parameter can be omitted.
+> The [options] parameter can be omitted in favour of defaults.
+
+<pre>defaultOpts = { persistent: true }</pre>
 
 See [amqp.node@channel_publish](http://www.squaremobius.net/amqp.node/channel_api.html#channel_publish) for details.
 
@@ -52,7 +54,12 @@ sails.hooks.amqp.publish("exchange-type-or-empty-string","my-queue-name","Hello 
 
 #### sails.hooks.amqp.subscribe(routingKey,onMessageCallback,[assertQueueOpts],[consumeOpts])
 
-> The [assertQueueOpts] & [consumeOpts] parameters can be omitted.
+> The [assertQueueOpts] & [consumeOpts] parameters can be omitted in favour of defaults.
+
+<pre>
+defaultAssertQueueOpts = { durable: true }
+defaultConsumeOpts     = { noAck: false }
+</pre>
 
 See [amqp.node@channel_assertQueue](http://www.squaremobius.net/amqp.node/channel_api.html#channel_assertQueue),
 [amqp.node@channel_consume](http://www.squaremobius.net/amqp.node/channel_api.html#channel_consume) for details.
