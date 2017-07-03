@@ -97,6 +97,22 @@ module.exports = function sailsHookAmqp(sails) {
             sails.after(eventsToWaitFor, function onAfter() {
                 self.process(next);
             });
+        },
+
+        getConnection : function getConnection() {
+            return _amqp.connection;
+        },
+
+        getPubChannel : function getPubChannel() {
+            return _amqp.pubChannel;
+        },
+
+        getOfflineQueues : function getOfflineQueues() {
+            return {
+                offlinePubQueue: _amqp.offlinePubQueue,
+                offlineQueue: _amqp.offlineQueue
+            }
         }
+
     };
 };

@@ -26,7 +26,7 @@ describe('Basic test ::', function() {
             amqp : {
                 amqpUrl : process.env.amqpUrl
             },
-            log: {level: "debug"}
+            log: {level: "verbose"}
         },function (err, _sails) {
             if (err) return done(err);
             sails = _sails;
@@ -43,8 +43,6 @@ describe('Basic test ::', function() {
         }
         // Otherwise just return
         return done();
-
-
     });
 
     // Test that Sails can lift with the hook in place
@@ -56,7 +54,7 @@ describe('Basic test ::', function() {
     // Test that AMQP client can connect to the server
     it('AMQP client connects', function(done) {
         this.timeout(10000);
-        sails.hooks["amqp"].connect(sails.config.amqp.amqpUrl,function (err,conn) {
+        sails.hooks.amqp.connect(sails.config.amqp.amqpUrl,function (err,conn) {
             if(err) return done(err)
             done()
         })
@@ -70,13 +68,13 @@ describe('Basic test ::', function() {
         var payload = "Hello test"
         var queue = "test.queue.string"
 
-        sails.hooks["amqp"].subscribe(queue,function onMessage(msg){
+        sails.hooks.amqp.subscribe(queue,function onMessage(msg){
             sails.log.debug("[sails-hook-amqp] : subscriber received message",msg)
             expect(msg).to.equal(payload);
             done();
         })
 
-        sails.hooks["amqp"].publish("",queue,payload)
+        sails.hooks.amqp.publish("",queue,payload)
     });
 
 
@@ -90,14 +88,14 @@ describe('Basic test ::', function() {
 
         var queue = "test.queue.json"
 
-        sails.hooks["amqp"].subscribe(queue,function onMessage(msg){
+        sails.hooks.amqp.subscribe(queue,function onMessage(msg){
             sails.log.debug("[sails-hook-amqp] : subscriber received message",msg)
             expect(msg).to.be.jsonSchema(payload);
             done();
         })
 
 
-        sails.hooks["amqp"].publish("",queue,payload)
+        sails.hooks.amqp.publish("",queue,payload)
 
     });
 
@@ -109,15 +107,12 @@ describe('Basic test ::', function() {
 
         var queue = "test.queue.buffer"
 
-        sails.hooks["amqp"].subscribe(queue,function onMessage(msg){
+        sails.hooks.amqp.subscribe(queue,function onMessage(msg){
             sails.log.debug("[sails-hook-amqp] : subscriber received message",msg)
             expect(msg).to.be.jsonSchema(payload);
             done();
         })
-
-
-        sails.hooks["amqp"].publish("",queue,payload)
-
+        sails.hooks.amqp.publish("",queue,payload)
     });
 
 
@@ -129,14 +124,14 @@ describe('Basic test ::', function() {
 
         var queue = "test.queue.sendToQueue"
 
-        sails.hooks["amqp"].subscribe(queue,function onMessage(msg){
+        sails.hooks.amqp.subscribe(queue,function onMessage(msg){
             sails.log.debug("[sails-hook-amqp] : subscriber received message",msg)
             expect(msg).to.be.jsonSchema(payload);
             done();
         })
 
 
-        sails.hooks["amqp"].sendToQueue(queue,payload)
+        sails.hooks.amqp.sendToQueue(queue,payload)
 
     });
 
