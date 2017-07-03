@@ -127,12 +127,12 @@ describe('Basic test ::', function() {
         sails.hooks.amqp.subscribe(queue,function onMessage(msg){
             sails.log.debug("[sails-hook-amqp] : subscriber received message",msg)
             expect(msg).to.be.jsonSchema(payload);
-            done();
+            sails.hooks.amqp.getConnection().close(function(err){
+                expect(err).to.be.a('null')
+                done();
+            })
         })
-
-
         sails.hooks.amqp.sendToQueue(queue,payload)
-
     });
 
 
@@ -143,7 +143,11 @@ describe('Basic test ::', function() {
         var amqp = sails.hooks.amqp.new();
         amqp.connect(sails.config.amqp.amqpUrl,function (err,instance) {
             expect(err).to.be.a('null')
-            done()
+            instance.connection.close(function(err){
+                expect(err).to.be.a('null')
+                done()
+            })
+
         })
     });
 

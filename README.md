@@ -99,9 +99,21 @@ sails.hooks.amqp.subscribe("my-queue-name",function onMessage(msg){
 })
 </pre>
 
+___
+
+### Other methods
+
+<pre>
+// Get Connection
+var connection = sails.hooks.amqp.getConnection();
+
+// Get Publication Channel
+var pubChannel = sails.hooks.amqp.getPubChannel();
+
+</pre>
 ___ 
 
-### Creating a connection manually
+### Connecting manually
 <pre>
 var amqp = sails.hooks.amqp.new();
 amqp.connect("amqp://your-server-url",function (err,instance) {
@@ -121,17 +133,4 @@ amqp.connect("amqp://your-server-url",function (err,instance) {
     instance.publish("exchange-type-or-empty-string","my-routing-key","Hello world!!")
     instance.sendToQueue("my-queue-name", new Buffer("Hello world!!"))
 })
-</pre>
-
-___ 
-
-### Other methods
-
-<pre>
-// Get Connection
-var connection = sails.hooks.amqp.getConnection();
-
-// Get Publication Channel
-var pubChannel = sails.hooks.amqp.getPubChannel();
-
 </pre>
