@@ -2,7 +2,7 @@
 
 var AMQP = require('./lib/amqp')
 var _ = require('@sailshq/lodash')
-var amqpObj = null;
+var _amqp = null;
 
 
 module.exports = function sailsHookAmqp(sails) {
@@ -39,25 +39,23 @@ module.exports = function sailsHookAmqp(sails) {
                 return next();
             }
 
-            this.connect(function(err,instance){
-                next();
-            });
+            this.connect(sails.config[this.configKey].amqpUrl,
+                sails.config[this.configKey].socketOptions,
+                function(err,instance){
+                    next();
+                });
         },
 
-        createInstance : function () {
+        new : function () {
           return new AMQP();
         },
 
-        connect : function connect(cb) {
-            var socketOpts = sails.config[this.configKey].socketOptions;
-
-            amqpObj = new AMQP();
-
-            amqpObj.connect(sails.config[this.configKey].amqpUrl,socketOpts, function (err, instance) {
+        connect : function connect(url,socketOpts,cb) {
+            _amqp = new AMQP();
+            _amqp.connect(url,socketOpts, function (err, instance) {
                 if (err) {
                     return cb(err);
                 }
-
                 console.log("[AMQP] connected");
                 cb(null,instance)
             });
@@ -65,13 +63,13 @@ module.exports = function sailsHookAmqp(sails) {
 
         publish : function publish(exchange, routingKey, content, opts) {
 
-            amqpObj.publish(exchange, routingKey, content, opts)
+            _amqp.publish(exchange, routingKey, content, opts)
 
         },
 
 
         sendToQueue : function sendToQueue(queue,content,opts) {
-            amqpObj.sendToQueue(queue,content,opts)
+            _amqp.sendToQueue(queue,content,opts)
         },
 
 
@@ -81,7 +79,7 @@ module.exports = function sailsHookAmqp(sails) {
             assertQueueOpts = _.merge(defaultAssertQueueOpts, (assertQueueOpts || {}))
             var defaultConsumeOpts = { noAck: false }
             consumeOpts = _.merge(defaultConsumeOpts, (consumeOpts || {}))
-            amqpObj.subscribe(q,onMessage,assertQueueOpts,consumeOpts)
+            _amqp.subscribe(q,onMessage,assertQueueOpts,consumeOpts)
 
         },
 

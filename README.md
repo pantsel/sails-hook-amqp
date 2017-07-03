@@ -96,3 +96,26 @@ sails.hooks.amqp.subscribe("my-queue-name",function onMessage(msg){
     console.log(msg)
 })
 </pre>
+
+
+### Creating a connection manually
+<pre>
+var amqp = sails.hooks.amqp.new();
+amqp.connect("amqp://your-server-url",function (err,instance) {
+    if(err) {
+        console.log(err);
+        return;
+    }
+    
+    instance.subscribe("my-routing-key",function onMessage(msg){
+        console.log(msg)
+    })
+    
+    instance.subscribe("my-queue-name",function onMessage(msg){
+            console.log(msg)
+        })
+
+    instance.publish("exchange-type-or-empty-string","my-routing-key","Hello world!!")
+    instance.sendToQueue("my-queue-name", new Buffer("Hello world!!"))
+})
+</pre>
