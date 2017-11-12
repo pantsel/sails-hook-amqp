@@ -53,6 +53,7 @@ sails.hooks.amqp.publish("exchange-type-or-empty-string","my-routing-key","Hello
 sails.hooks.amqp.publish("exchange-type-or-empty-string","my-routing-key",new Buffer("Hello world!!"))
 </pre>
 
+___ 
 
 ### Send to Queue
 Send a single message with the content given as a buffer, string or JSON to the specific queue named, bypassing routing. The options and return value are exactly the same as for #publish.
@@ -75,6 +76,7 @@ sails.hooks.amqp.sendToQueue("my-queue-name",{
 
 </pre>
 
+___
 
 ### Subscribe
 
@@ -94,5 +96,41 @@ See [amqp.node@channel_assertQueue](http://www.squaremobius.net/amqp.node/channe
 <pre>
 sails.hooks.amqp.subscribe("my-queue-name",function onMessage(msg){
     console.log(msg)
+})
+</pre>
+
+___
+
+### Other methods
+
+<pre>
+// Get Connection
+var connection = sails.hooks.amqp.getConnection();
+
+// Get Publication Channel
+var pubChannel = sails.hooks.amqp.getPubChannel();
+
+</pre>
+___ 
+
+### Connecting manually
+<pre>
+var amqp = sails.hooks.amqp.new();
+amqp.connect("amqp://your-server-url",function (err,instance) {
+    if(err) {
+        console.log(err);
+        return;
+    }
+    
+    instance.subscribe("my-routing-key",function onMessage(msg){
+        console.log(msg)
+    })
+    
+    instance.subscribe("my-queue-name",function onMessage(msg){
+            console.log(msg)
+        })
+
+    instance.publish("exchange-type-or-empty-string","my-routing-key","Hello world!!")
+    instance.sendToQueue("my-queue-name", new Buffer("Hello world!!"))
 })
 </pre>
